@@ -6,7 +6,7 @@ import me.combimagnetron.sunscreen.provider.impl.ScreenProvider;
 
 public interface SunscreenLibrary {
 
-    Screen screen(ScreenProvider provider);
+    Screen screen(ScreenProvider<?> provider);
 
     FullScreen enlarge(Screen screen);
 

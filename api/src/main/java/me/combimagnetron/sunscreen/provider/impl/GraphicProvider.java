@@ -6,13 +6,14 @@ import me.combimagnetron.sunscreen.provider.Provider;
 import me.combimagnetron.sunscreen.util.Pos2D;
 
 import javax.swing.*;
-import javax.swing.text.html.HTMLDocument;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 public interface GraphicProvider extends Provider<Canvas> {
+
+    static HtmlGraphicProvider html(HtmlDocument document, Pos2D size) {
+        return new HtmlGraphicProvider(document, size);
+    }
 
     class HtmlGraphicProvider implements GraphicProvider {
         private final HtmlDocument document;
@@ -21,10 +22,6 @@ public interface GraphicProvider extends Provider<Canvas> {
         private HtmlGraphicProvider(HtmlDocument document, Pos2D size) {
             this.document = document;
             this.size = size;
-        }
-
-        public static HtmlGraphicProvider of(HtmlDocument document, Pos2D size) {
-            return new HtmlGraphicProvider(document, size);
         }
 
         private BufferedImage image() throws IOException {
