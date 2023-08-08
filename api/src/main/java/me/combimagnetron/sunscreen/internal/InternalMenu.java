@@ -1,10 +1,12 @@
 package me.combimagnetron.sunscreen.internal;
 
+import me.combimagnetron.sunscreen.internal.network.Network;
 import me.combimagnetron.sunscreen.util.Pos2D;
 import net.kyori.adventure.text.Component;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 public interface InternalMenu {
 
@@ -18,7 +20,7 @@ public interface InternalMenu {
 
     void item(Pos2D pos2D, Item<?> item);
 
-    interface Network {
+    interface MenuNetwork extends Network {
 
     }
 
@@ -39,7 +41,7 @@ public interface InternalMenu {
         }
 
         class AnimatedTitle implements Title {
-            private final Collection<Component> titles = new LinkedList<>();
+            private final List<Component> titles = new LinkedList<>();
             private int frame = 0;
 
             AnimatedTitle(Collection<Component> titles) {
