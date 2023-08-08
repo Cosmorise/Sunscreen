@@ -57,7 +57,7 @@ public class Item<M> {
     }
 
     public NBTCompound nbtCompound() {
-        return nbtCompound.modify(builder -> builder.plus(NBTCompound.EMPTY).setInt("CustomModelData", customModelData))
+        return nbtCompound;
     }
 
     public interface NbtAdapter<T> {
