@@ -20,10 +20,6 @@ public interface InternalMenu {
 
     void item(Pos2D pos2D, Item<?> item);
 
-    interface MenuNetwork extends Network {
-
-    }
-
     interface Title {
 
         Component next();

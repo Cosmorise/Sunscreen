@@ -1,42 +1,69 @@
 package me.combimagnetron.sunscreen.internal;
 
 import net.kyori.adventure.text.Component;
-import org.jglrxavpok.hephaistos.nbt.NBT;
-import org.jglrxavpok.hephaistos.nbt.NBTCompound;
-import org.jglrxavpok.hephaistos.nbt.NBTInt;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import org.jglrxavpok.hephaistos.nbt.*;
+import org.jglrxavpok.hephaistos.nbt.mutable.MutableNBTCompound;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
 public class Item<M> {
-
+    private final static Item<String> EMPTY = Item.item("air");
+    private List<Component> lore = new ArrayList<>();
+    private MutableNBTCompound nbtCompound;
+    private MutableNBTCompound tag;
+    private int amount;
     private final M material;
     private int customModelData;
     private Component name;
-    private Collection<Component> lore;
-    private NBTCompound nbtCompound;
 
-    private Item(M material) {
+    private Item(M material, int amount) {
         this.material = material;
+        this.amount = amount;
+        this.nbtCompound = NBTCompound.EMPTY.toMutableCompound();
+        this.nbtCompound.set("id", NBT.String((String) material));
+        this.nbtCompound.set("count", NBT.Byte(1));
+        this.tag = nbtCompound.set("tag", NBTCompound.EMPTY);
+        this.tag.set("display", NBTCompound.EMPTY);
     }
 
     public static <T> Item<T> item(T material) {
-        return new Item<>(material);
+        return new Item<>(material, 1);
+    }
+
+    public static <T> Item<T> item(T material, int amount) {
+        return new Item<>(material, amount);
+    }
+
+    public static Item<?> empty() {
+        return EMPTY;
     }
 
     public Item<M> customModelData(int customModelData) {
         this.customModelData = customModelData;
+        this.nbtCompound.set("CustomModelData", NBT.Int(this.customModelData));
         return this;
     }
 
     public Item<M> name(Component name) {
         this.name = name;
+        this.nbtCompound.getCompound("display")
+                .modify(builder -> builder.set("Name", NBT.String(GsonComponentSerializer.gson().serialize(this.name))));
         return this;
     }
 
     public Item<M> lore(Component... lore) {
-        this.lore = List.of(lore);
+        this.lore.addAll(List.of(lore));
+        this.nbtCompound.getCompound("display")
+                .modify(builder -> {
+                    builder.set("Lore", NBT.List(
+                            NBTType.TAG_String, this.lore.stream().map(component -> NBT.String(GsonComponentSerializer.gson().serialize(component))).toList()
+                    ));
+                });
         return this;
     }
 
@@ -52,12 +79,21 @@ public class Item<M> {
         return this.name;
     }
 
+    public int amount() {
+        return this.amount;
+    }
+
     public Collection<Component> lore() {
         return this.lore;
     }
 
-    public NBTCompound nbtCompound() {
-        return nbtCompound;
+    public NBTCompound nbt() {
+        return nbtCompound.toCompound();
+    }
+
+    public record Slot(Item<?> item, int slot) {
+
+
     }
 
     public interface NbtAdapter<T> {
