@@ -1,40 +1,28 @@
 package me.combimagnetron.sunscreen.script;
 
+import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
-public class Token {
-    private final Type type;
-    private final String captured;
+public record Token(Type<?> type, String captured) {
 
-    public Token(Type type, String captured) {
-        this.type = type;
-        this.captured = captured;
-    }
+    public interface Type<T> {
+        Type<Object> OBJECT = Impl.of("/([A-Z]\\w*)/g");
+        Type<Method> METHOD_REFERENCE = Impl.of("/(\\.[a-z]+)*/g");
+        Type<String> TEXT = Impl.of("/\"(.*?)\"/g");
+        Type<Double> NUMBER = Impl.of("/[\\d\\.]+/g");
+        Type<?>[] VALUES = new Type[]{OBJECT, METHOD_REFERENCE, TEXT, NUMBER};
 
-    public Type type() {
-        return this.type;
-    }
+        Pattern pattern();
 
-    public String captured() {
-        return this.captured;
-    }
+        record Impl<T>(String literalPattern) implements Type<T> {
+            public static <T> Impl<T> of(String literalPattern) {
+                return new Impl<>(literalPattern);
+            }
 
-
-    public enum Type {
-        OBJECT("/([A-Z]\\w*)/g"), METHOD_REFERENCE("/(\\.[a-z]+)*/g"), TEXT("/\"(.*?)\"/g"), NUMBER("/[\\d\\.]+/g");
-
-        private final String pattern;
-
-        Type(String pattern) {
-            this.pattern = pattern;
-        }
-
-        public String patternLiteral() {
-            return pattern;
-        }
-
-        public Pattern pattern() {
-            return Pattern.compile(pattern);
+            @Override
+            public Pattern pattern() {
+                return Pattern.compile(literalPattern);
+            }
         }
 
     }
