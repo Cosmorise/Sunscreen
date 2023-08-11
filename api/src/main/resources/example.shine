@@ -1,0 +1,27 @@
+persistent field essentials = plugin("EssentialsX")
+
+open func(User user) heal {
+    user.player.health = 100%
+}
+
+open func(Text name, Player player) purchaseItem {
+    field essentialsUser = player as essentials(IUser)
+    field shopItem = ShopItem.get(name);
+    when(essentialsUser.canAfford(shopItem.value)) {
+        essentialsUser.takeMoney(shopItem.value)
+        shopItem.give(player)
+    }
+}
+
+open class ShopItem(Item item, Number value) {
+    persistent field registry = Registry.of(Text, ShopItem)
+
+    persistent func(Text name) returns ShopItem {
+        return registry.get(name)
+    }
+
+    open func(Player player) give {
+        player.inventory.item(9, item)
+    }
+
+}

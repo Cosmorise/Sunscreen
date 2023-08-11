@@ -8,15 +8,13 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public interface InternalMenu {
+public interface Menu {
 
     Item<?>[][] contentsByCoordinates();
 
     Collection<Item<?>> contents();
 
     Title title();
-
-    Network network();
 
     void item(Pos2D pos2D, Item<?> item);
 
