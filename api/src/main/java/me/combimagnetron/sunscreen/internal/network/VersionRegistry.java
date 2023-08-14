@@ -3,6 +3,7 @@ package me.combimagnetron.sunscreen.internal.network;
 import me.combimagnetron.sunscreen.internal.network.packet.PacketContainer;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 
 public abstract class VersionRegistry {
@@ -15,6 +16,10 @@ public abstract class VersionRegistry {
     @SafeVarargs
     public static void register(Entry<? extends PacketContainer>... entries) {
         Arrays.stream(entries).forEach(entry -> MAP.put(entry.id(), entry.clazz()));
+    }
+
+    public static void register(Collection<Entry<? extends PacketContainer>> collection) {
+        collection.forEach(entry -> MAP.put(entry.id(), entry.clazz()));
     }
 
     public interface Entry<T extends PacketContainer> {

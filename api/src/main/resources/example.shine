@@ -13,7 +13,7 @@ open func(Text name, Player player) purchaseItem {
     }
 }
 
-open class ShopItem(Item item, Number value) {
+class ShopItem(Item item, Number value) {
     persistent field registry = Registry.of(Text, ShopItem)
 
     persistent func(Text name) returns ShopItem {

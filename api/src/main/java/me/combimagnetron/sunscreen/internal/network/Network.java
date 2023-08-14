@@ -5,7 +5,7 @@ import me.combimagnetron.sunscreen.user.User;
 
 public interface Network {
 
-    ConnectedUser connectedUser(User user);
+    Connection connection(User<?> user);
 
     Sniffer sniffer();
 
