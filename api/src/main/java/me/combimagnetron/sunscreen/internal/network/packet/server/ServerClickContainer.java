@@ -15,7 +15,7 @@ public class ServerClickContainer implements PacketContainer {
     private final int mode;
     private final Collection<Item<?>> updated;
     private final Item<?> carried;
-    
+
     private ServerClickContainer(ByteBuffer byteBuffer) {
         this.byteBuffer = byteBuffer;
         this.windowId = read(ByteBuffer.Adapter.UNSIGNED_BYTE);
@@ -27,10 +27,37 @@ public class ServerClickContainer implements PacketContainer {
         this.carried = read(ByteBuffer.Adapter.ITEM);
     }
 
-
     @Override
     public ByteBuffer byteBuffer() {
         return byteBuffer;
+    }
+
+    public int windowId() {
+        return windowId;
+    }
+
+    public int stateId() {
+        return stateId;
+    }
+
+    public short slot() {
+        return slot;
+    }
+
+    public byte button() {
+        return button;
+    }
+
+    public int mode() {
+        return mode;
+    }
+
+    public Collection<Item<?>> updated() {
+        return updated;
+    }
+
+    public Item<?> carried() {
+        return carried;
     }
 
     @Override
