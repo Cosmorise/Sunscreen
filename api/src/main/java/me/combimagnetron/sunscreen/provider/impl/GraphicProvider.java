@@ -1,11 +1,13 @@
 package me.combimagnetron.sunscreen.provider.impl;
 
+import gui.ava.html.image.generator.HtmlImageGenerator;
 import me.combimagnetron.sunscreen.graphic.Canvas;
 import me.combimagnetron.sunscreen.graphic.html.HtmlDocument;
 import me.combimagnetron.sunscreen.provider.Provider;
 import me.combimagnetron.sunscreen.util.Pos2D;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -25,13 +27,10 @@ public interface GraphicProvider extends Provider<Canvas> {
         }
 
         private BufferedImage image() throws IOException {
-            BufferedImage image = new BufferedImage(2, (int) size.x(), (int) size.y());
-            String htmlString = document.content();
-            JEditorPane editorPane = new JEditorPane();
-            editorPane.setContentType("text/html");
-            editorPane.setText(htmlString);
-            SwingUtilities.paintComponent(image.createGraphics(), editorPane, new JPanel(), 0, 0, image.getWidth(), image.getHeight());
-            return image;
+            HtmlImageGenerator generator = new HtmlImageGenerator();
+            generator.loadHtml(document.content());
+            generator.setSize(new Dimension((int) size.x(), (int) size.y()));
+            return generator.getBufferedImage();
         }
 
         @Override

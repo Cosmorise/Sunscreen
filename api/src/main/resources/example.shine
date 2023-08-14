@@ -1,26 +1,26 @@
 persistent field essentials = plugin("EssentialsX")
 
-open func(User user) heal {
-    user.player.health = 100%
+func(User user) heal { // Function parameters can be added to the func keyword and the function name.
+    user.player.health = 100% // Percentages automatically assign the right value based on the max, if it can find it.
 }
 
-open func(Text name, Player player) purchaseItem {
-    field essentialsUser = player as essentials(IUser)
-    field shopItem = ShopItem.get(name);
+func(Text name, var player) purchaseItem { // Both 'var'/'val' keywords and declared classes.
+    var essentialsUser = player as essentials(IUser) // Casting using the keyword 'as'
+    var shopItem = ShopItem.get(name);
     when(essentialsUser.canAfford(shopItem.value)) {
         essentialsUser.takeMoney(shopItem.value)
         shopItem.give(player)
     }
 }
 
-class ShopItem(Item item, Number value) {
-    persistent field registry = Registry.of(Text, ShopItem)
+class ShopItem(Item item, Number value) { // Classes use the java records style by default
+    field REGISTRY = Registry.of(Text, ShopItem) // Fields are static if you use uppercase snake-case and/or final if it's never reassigned.
 
-    persistent func(Text name) returns ShopItem {
+    persistent func(Text name) returns ShopItem { // Persistent is the same as static, just better wording.
         return registry.get(name)
     }
 
-    open func(Player player) give {
+    func(Player player) : Item { // Declaring the return type is optional.
         player.inventory.item(9, item)
     }
 

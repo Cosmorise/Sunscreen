@@ -1,0 +1,178 @@
+package me.combimagnetron.sunscreen.internal;
+
+import me.combimagnetron.sunscreen.internal.network.Connection;
+import me.combimagnetron.sunscreen.internal.network.packet.client.ClientOpenScreen;
+import me.combimagnetron.sunscreen.internal.network.packet.client.ClientSetScreenContent;
+import me.combimagnetron.sunscreen.internal.network.packet.server.ServerClickContainer;
+import me.combimagnetron.sunscreen.provider.impl.WindowIdProvider;
+import me.combimagnetron.sunscreen.user.User;
+import me.combimagnetron.sunscreen.util.Pos2D;
+import net.kyori.adventure.text.Component;
+
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Consumer;
+
+public interface ChestMenu {
+
+    Contents contents();
+
+    Title title();
+
+    void title(Title title);
+
+    void item(Pos2D pos2D, Item<?> item);
+
+    void click(ServerClickContainer packet);
+
+    final class Impl implements ChestMenu {
+        private final Contents contents = new Contents(c -> this.refresh());
+        private final int windowId = WindowIdProvider.next(this);
+        private final User<?> viewer;
+        private final Connection connection;
+        private Title title;
+
+        public Impl(User<?> viewer) {
+            this.viewer = viewer;
+            this.connection = viewer.connection();
+            this.title = Title.fixed(Component.text("Sunscreen Menu #" + (windowId * -1)));
+            open();
+        }
+
+        private void open() {
+            final ClientOpenScreen openScreen = ClientOpenScreen.of(windowId, 5, title.next());
+            final ClientSetScreenContent setScreenContent = ClientSetScreenContent.of(contents.all(), Item.empty(), 0, windowId);
+            connection.send(openScreen);
+            connection.send(setScreenContent);
+        }
+
+        private void refresh() {
+
+        }
+
+        @Override
+        public Contents contents() {
+            return contents;
+        }
+
+        @Override
+        public Title title() {
+            return title;
+        }
+
+        public void title(Title title) {
+            this.title = title;
+        }
+
+        @Override
+        public void item(Pos2D pos2D, Item<?> item) {
+
+        }
+
+        @Override
+        public void click(ServerClickContainer packet) {
+
+        }
+    }
+
+    final class Contents {
+        private final List<Row> rows = new LinkedList<>();
+        private final Consumer<Contents> updateConsumer;
+
+        private Contents(Consumer<Contents> updateConsumer) {
+            this.updateConsumer = updateConsumer;
+        }
+
+        public void set(Pos2D pos, Item<?> item) {
+            Row row = rows.get((int) pos.y());
+            row.list.set((int) pos.x(), item);
+            updateConsumer.accept(this);
+        }
+
+        public Item<?> get(Pos2D pos) {
+            Row row = rows.get((int) pos.y());
+            return row.list.get((int) pos.x());
+        }
+
+        public Collection<Item<?>> all() {
+            final LinkedHashSet<Item<?>> items = new LinkedHashSet<>();
+            rows.forEach(row -> items.addAll(row.list));
+            return items;
+        }
+
+        public Row row(int index) {
+            return rows.get(index);
+        }
+
+        public List<Row> rows() {
+            return rows;
+        }
+
+        public Column column(int index) {
+            return Column.from(this, index);
+        }
+
+        public int sizeVertical() {
+            return rows.size();
+        }
+
+        public record Row(LinkedList<Item<?>> list) {
+
+            static Row of(LinkedList<Item<?>> list) {
+                return new Row(list);
+            }
+
+        }
+
+        public record Column(LinkedList<Item<?>> list) {
+
+            static Column of(LinkedList<Item<?>> list) {
+                return new Column(list);
+            }
+
+            static Column from(Contents contents, int index) {
+                final LinkedList<Item<?>> itemList = new LinkedList<>();
+                contents.rows.forEach(row -> itemList.add(row.list.get(index)));
+                return new Column(itemList);
+            }
+
+        }
+
+    }
+
+    interface Title {
+
+        Component next();
+
+        static FixedTitle fixed(Component title) {
+            return new FixedTitle(title);
+        }
+
+        static AnimatedTitle animated(Collection<Component> titles) {
+            return new AnimatedTitle(titles);
+        }
+
+        record FixedTitle(Component next) implements Title {
+
+        }
+
+        class AnimatedTitle implements Title {
+            private final List<Component> titles = new LinkedList<>();
+            private int frame = 0;
+
+            AnimatedTitle(Collection<Component> titles) {
+                this.titles.addAll(titles);
+            }
+
+            @Override
+            public Component next() {
+                this.frame = titles.size() > frame + 1 ? 0 : frame + 1;
+                return titles.get(this.frame);
+            }
+        }
+
+    }
+
+}

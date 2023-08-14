@@ -1,5 +1,7 @@
 package me.combimagnetron.sunscreen.script;
 
+import me.combimagnetron.sunscreen.util.Values;
+
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
@@ -10,7 +12,7 @@ public record Token(Type<?> type, String captured) {
         Type<Method> METHOD_REFERENCE = Impl.of("/(\\.[a-z]+)*/g");
         Type<String> TEXT = Impl.of("/\"(.*?)\"/g");
         Type<Double> NUMBER = Impl.of("/[\\d\\.]+/g");
-        Type<?>[] VALUES = new Type[]{OBJECT, METHOD_REFERENCE, TEXT, NUMBER};
+        Values<Type<?>> VALUES = Values.of(OBJECT, METHOD_REFERENCE, TEXT, NUMBER);
 
         Pattern pattern();
 

@@ -3,6 +3,7 @@ package me.combimagnetron.sunscreen.internal.network.packet;
 import me.combimagnetron.sunscreen.internal.network.ByteBuffer;
 import me.combimagnetron.sunscreen.internal.network.packet.client.ClientOpenScreen;
 import me.combimagnetron.sunscreen.internal.network.packet.client.ClientSetScreenContent;
+import me.combimagnetron.sunscreen.internal.network.packet.server.ServerClickContainer;
 
 public interface PacketContainer {
 
@@ -44,6 +45,10 @@ public interface PacketContainer {
         interface Client {
             Type<ClientSetScreenContent> SET_SCREEN_CONTENT = Impl.of(ClientSetScreenContent.class);
             Type<ClientOpenScreen> OPEN_WINDOW = Impl.of(ClientOpenScreen.class);
+        }
+
+        interface Server {
+            Type<ServerClickContainer> CLICK_CONTAINER = Impl.of(ServerClickContainer.class);
         }
 
         record Impl<T extends PacketContainer>(Class<T> clazz) implements Type<T> {

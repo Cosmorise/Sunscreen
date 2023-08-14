@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -38,11 +39,32 @@ public final class ByteBuffer {
         return type.read(byteArrayDataInput);
     }
     public <T> void writeCollection(Adapter<T> type, Collection<T> collection) {
-        write(Adapter.INT, collection.size());
+        write(Adapter.VAR_INT, collection.size());
         for (T t : collection) {
             write(type, t);
         }
     }
+
+    public <T extends Writeable> void writeCollection(Collection<T> collection) {
+        write(Adapter.VAR_INT, collection.size());
+        for (T t : collection) {
+            t.write(this);
+        }
+    }
+
+    public <T extends Enum<?>> T readEnum(Class<T> clazz) {
+        return clazz.getEnumConstants()[read(Adapter.VAR_INT)];
+    }
+
+    public <T> Collection<T> readCollection(Function<ByteBuffer, T> function) {
+        final int size = read(Adapter.VAR_INT);
+        final List<T> values = new java.util.ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            values.add(function.apply(this));
+        }
+        return values;
+    }
+
     public <T> Collection<T> readCollection(Adapter<T> type, Supplier<Collection<T>> collectionSupplier) {
         Collection<T> collection = collectionSupplier.get();
         int size = read(Adapter.INT);
@@ -51,12 +73,20 @@ public final class ByteBuffer {
         }
         return collection;
     }
+
     public byte[] bytes() {
         if (byteArrayDataOutput == null) {
             throw new RuntimeException();
         }
         return byteArrayDataOutput.toByteArray();
     }
+
+    public interface Writeable {
+
+        void write(final ByteBuffer byteBuffer);
+
+    }
+
     public interface Adapter<T> {
         Adapter<String> STRING = Impl.of(ByteArrayDataInput::readUTF, ByteArrayDataOutput::writeUTF);
         Adapter<Integer> INT = Impl.of(ByteArrayDataInput::readInt, ByteArrayDataOutput::writeInt);

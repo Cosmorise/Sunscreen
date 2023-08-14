@@ -24,18 +24,22 @@ public abstract class VersionRegistry {
 
     public interface Entry<T extends PacketContainer> {
 
-        static <T extends PacketContainer> Entry<T> of(Class<T> clazz, int id) {
-            return new Impl<>(clazz, id);
+        static <T extends PacketContainer> Entry<T> of(Class<T> clazz, int id, Type type) {
+            return new Impl<>(clazz, id, type);
+        }
+
+        enum Type {
+            CLIENT, SERVER
         }
 
         Class<T> clazz();
 
         int id();
 
-        record Impl<T extends PacketContainer>(Class<T> clazz, int id) implements Entry<T> {
+        record Impl<T extends PacketContainer>(Class<T> clazz, int id, Type type) implements Entry<T> {
 
-            public static <T extends PacketContainer> Impl<T> of(Class<T> clazz, int id) {
-                return new Impl<>(clazz, id);
+            public static <T extends PacketContainer> Impl<T> of(Class<T> clazz, int id, Type type) {
+                return new Impl<>(clazz, id, type);
             }
 
         }

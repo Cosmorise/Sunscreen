@@ -10,15 +10,15 @@ import java.util.function.Consumer;
 
 public interface Sniffer {
 
-    Node node(String name);
+    <T extends PacketContainer> Node<T> node(String name);
 
     void call(PacketContainer container);
 
     class Impl implements Sniffer {
-        private final Map<String, Node> nodeMap = new TreeMap<>();
+        private final Map<String, Node<PacketContainer>> nodeMap = new TreeMap<>();
 
         @Override
-        public Node node(String name) {
+        public Node<PacketContainer> node(String name) {
             return nodeMap.computeIfAbsent(name, Node::new);
         }
 
@@ -28,9 +28,9 @@ public interface Sniffer {
         }
     }
 
-
-    class Node {
-        private final Map<PacketContainer.Type<? extends PacketContainer>, Ticket<? extends PacketContainer>> ticketMap = new HashMap<>();
+    @SuppressWarnings("unchecked")
+    class Node<T extends PacketContainer> {
+        private final Map<PacketContainer.Type<T>, Ticket<T>> ticketMap = new HashMap<>();
         private final String name;
         private Condition<PacketContainer> condition;
 
@@ -47,13 +47,13 @@ public interface Sniffer {
             return condition;
         }
 
-        public <T extends PacketContainer> Ticket<T> subscribe(PacketContainer.Type<T> type) {
+        public Ticket<T> subscribe(PacketContainer.Type<T> type) {
             final Ticket<T> ticket = new Ticket<>();
             this.ticketMap.put(type, ticket);
             return ticket;
         }
 
-        public void post(PacketContainer container) {
+        public void post(T container) {
             if (condition == null || !condition.eval(container).result()) {
                 return;
             }
@@ -65,15 +65,15 @@ public interface Sniffer {
     }
 
     class Ticket<T extends PacketContainer> {
-        private Consumer<PacketContainer> sendConsumer;
-        private Consumer<PacketContainer> receiveConsumer;
+        private Consumer<T> sendConsumer = event -> {};
+        private Consumer<T> receiveConsumer = event -> {};
 
-        public Ticket<T> receive(Consumer<PacketContainer> receiveConsumer) {
+        public Ticket<T> receive(Consumer<T> receiveConsumer) {
             this.receiveConsumer = receiveConsumer;
             return this;
         }
 
-        public Ticket<T> send(Consumer<PacketContainer> sendConsumer) {
+        public Ticket<T> send(Consumer<T> sendConsumer) {
             this.receiveConsumer = sendConsumer;
             return this;
         }

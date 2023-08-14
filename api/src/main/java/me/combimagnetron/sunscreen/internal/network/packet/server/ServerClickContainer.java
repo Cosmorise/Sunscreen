@@ -12,9 +12,21 @@ public class ServerClickContainer implements PacketContainer {
     private final int stateId;
     private final short slot;
     private final byte button;
-    private final int mode;
-    private final Collection<Item<?>> updated;
+    private final ClickType clickType;
+    private final Collection<ChangedSlot> updated;
     private final Item<?> carried;
+
+    public ServerClickContainer(int windowId, int stateId, short slot, byte button, ClickType clickType, Collection<ChangedSlot> updated, Item<?> carried) {
+        this.byteBuffer = ByteBuffer.empty();
+        this.windowId = windowId;
+        this.stateId = stateId;
+        this.slot = slot;
+        this.button = button;
+        this.clickType = clickType;
+        this.updated = updated;
+        this.carried = carried;
+        write();
+    }
 
     private ServerClickContainer(ByteBuffer byteBuffer) {
         this.byteBuffer = byteBuffer;
@@ -22,8 +34,8 @@ public class ServerClickContainer implements PacketContainer {
         this.stateId = read(ByteBuffer.Adapter.VAR_INT);
         this.slot = read(ByteBuffer.Adapter.SHORT);
         this.button = read(ByteBuffer.Adapter.BYTE);
-        this.mode = read(ByteBuffer.Adapter.VAR_INT);
-        this.updated = null;
+        this.clickType = byteBuffer.readEnum(ClickType.class);
+        this.updated = byteBuffer.readCollection(ChangedSlot::new);
         this.carried = read(ByteBuffer.Adapter.ITEM);
     }
 
@@ -48,11 +60,11 @@ public class ServerClickContainer implements PacketContainer {
         return button;
     }
 
-    public int mode() {
-        return mode;
+    public ClickType clickType() {
+        return clickType;
     }
 
-    public Collection<Item<?>> updated() {
+    public Collection<ChangedSlot> updated() {
         return updated;
     }
 
@@ -62,6 +74,36 @@ public class ServerClickContainer implements PacketContainer {
 
     @Override
     public byte[] write() {
-        return new byte[0];
+        write(ByteBuffer.Adapter.UNSIGNED_BYTE, windowId);
+        write(ByteBuffer.Adapter.VAR_INT, stateId);
+        write(ByteBuffer.Adapter.SHORT, slot);
+        write(ByteBuffer.Adapter.BYTE, button);
+        write(ByteBuffer.Adapter.VAR_INT, clickType.ordinal());
+        byteBuffer.writeCollection(updated);
+        write(ByteBuffer.Adapter.ITEM, carried);
+        return byteBuffer.bytes();
     }
+
+    public record ChangedSlot(short slot, Item<?> item) implements ByteBuffer.Writeable {
+        public ChangedSlot(final ByteBuffer byteBuffer) {
+            this(byteBuffer.read(ByteBuffer.Adapter.SHORT), byteBuffer.read(ByteBuffer.Adapter.ITEM));
+        }
+
+        @Override
+        public void write(ByteBuffer byteBuffer) {
+            byteBuffer.write(ByteBuffer.Adapter.SHORT, slot);
+            byteBuffer.write(ByteBuffer.Adapter.ITEM, item);
+        }
+    }
+
+    public enum ClickType {
+        PICK_UP,
+        FAST_MOVE,
+        SWAP,
+        DUPE,
+        DROP,
+        FAST_CRAFT,
+        PICK_UP_ALL
+    }
+
 }
