@@ -2,14 +2,23 @@ package me.combimagnetron.sunscreen.internal.network.packet.client;
 
 import me.combimagnetron.sunscreen.internal.Item;
 import me.combimagnetron.sunscreen.internal.network.ByteBuffer;
-import me.combimagnetron.sunscreen.internal.network.packet.PacketContainer;
+import me.combimagnetron.sunscreen.internal.network.packet.ClientPacket;
+import org.checkerframework.checker.units.qual.C;
 
-public class ClientSetScreenSlot implements PacketContainer {
+public class ClientSetScreenSlot implements ClientPacket {
     private final ByteBuffer byteBuffer;
     private final int windowId;
     private final int stateId;
     private final short slot;
     private final Item<?> item;
+
+    public static ClientSetScreenSlot of(int windowId, int stateId, short slot, Item<?> item) {
+        return new ClientSetScreenSlot(windowId, stateId, slot, item);
+    }
+
+    public static ClientSetScreenSlot from(ByteBuffer byteBuffer) {
+        return new ClientSetScreenSlot(byteBuffer);
+    }
 
     private ClientSetScreenSlot(int windowId, int stateId, short slot, Item<?> item) {
         this.byteBuffer = ByteBuffer.empty();

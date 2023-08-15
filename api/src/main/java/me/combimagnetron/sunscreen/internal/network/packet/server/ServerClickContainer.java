@@ -2,11 +2,11 @@ package me.combimagnetron.sunscreen.internal.network.packet.server;
 
 import me.combimagnetron.sunscreen.internal.Item;
 import me.combimagnetron.sunscreen.internal.network.ByteBuffer;
-import me.combimagnetron.sunscreen.internal.network.packet.PacketContainer;
+import me.combimagnetron.sunscreen.internal.network.packet.ServerPacket;
 
 import java.util.Collection;
 
-public class ServerClickContainer implements PacketContainer {
+public class ServerClickContainer implements ServerPacket {
     private final ByteBuffer byteBuffer;
     private final int windowId;
     private final int stateId;

@@ -1,11 +1,14 @@
 package me.combimagnetron.sunscreen.internal;
 
 import me.combimagnetron.sunscreen.internal.network.Connection;
+import me.combimagnetron.sunscreen.internal.network.packet.client.ClientBundleDelimiter;
 import me.combimagnetron.sunscreen.internal.network.packet.client.ClientOpenScreen;
 import me.combimagnetron.sunscreen.internal.network.packet.client.ClientSetScreenContent;
+import me.combimagnetron.sunscreen.internal.network.packet.client.ClientSetScreenSlot;
 import me.combimagnetron.sunscreen.internal.network.packet.server.ServerClickContainer;
 import me.combimagnetron.sunscreen.provider.impl.WindowIdProvider;
 import me.combimagnetron.sunscreen.user.User;
+import me.combimagnetron.sunscreen.util.Pair;
 import me.combimagnetron.sunscreen.util.Pos2D;
 import net.kyori.adventure.text.Component;
 
@@ -13,7 +16,9 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public interface ChestMenu {
 
@@ -46,10 +51,13 @@ public interface ChestMenu {
             final ClientSetScreenContent setScreenContent = ClientSetScreenContent.of(contents.all(), Item.empty(), 0, windowId);
             connection.send(openScreen);
             connection.send(setScreenContent);
+            refresh();
         }
 
         private void refresh() {
-
+            connection.send(ClientBundleDelimiter.bundleDelimiter());
+            contents.pairStream().forEach(pair -> connection.send(ClientSetScreenSlot.of(windowId, 0, pair.k().shortValue(), pair.v())));
+            connection.send(ClientBundleDelimiter.bundleDelimiter());
         }
 
         @Override
@@ -108,6 +116,13 @@ public interface ChestMenu {
 
         public List<Row> rows() {
             return rows;
+        }
+
+        public Stream<Pair<Integer, Item<?>>> pairStream() {
+            final LinkedList<Pair<Integer, Item<?>>> list = new LinkedList<>();
+            AtomicInteger slot = new AtomicInteger();
+            rows.forEach(row -> list.addAll((Collection<? extends Pair<Integer, Item<?>>>) row.list.stream().map(item -> Pair.of(slot.getAndIncrement(), item)).toList()));
+            return list.stream();
         }
 
         public Column column(int index) {

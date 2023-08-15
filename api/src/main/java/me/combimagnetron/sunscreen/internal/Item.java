@@ -26,7 +26,7 @@ public class Item<M> {
         this.amount = amount;
         this.nbtCompound = NBTCompound.EMPTY.toMutableCompound();
         this.nbtCompound.set("id", NBT.String((String) material));
-        this.nbtCompound.set("count", NBT.Byte(1));
+        this.nbtCompound.set("count", NBT.Byte(amount));
         this.tag = nbtCompound.set("tag", NBTCompound.EMPTY);
         this.tag.set("display", NBTCompound.EMPTY);
     }
@@ -92,7 +92,6 @@ public class Item<M> {
     }
 
     public record Slot(Item<?> item, int slot) {
-
 
     }
 

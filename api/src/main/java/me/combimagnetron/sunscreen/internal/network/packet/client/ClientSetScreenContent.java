@@ -2,12 +2,12 @@ package me.combimagnetron.sunscreen.internal.network.packet.client;
 
 import me.combimagnetron.sunscreen.internal.Item;
 import me.combimagnetron.sunscreen.internal.network.ByteBuffer;
-import me.combimagnetron.sunscreen.internal.network.packet.PacketContainer;
+import me.combimagnetron.sunscreen.internal.network.packet.ClientPacket;
 
 import java.util.Collection;
 import java.util.HashSet;
 
-public class ClientSetScreenContent implements PacketContainer {
+public class ClientSetScreenContent implements ClientPacket {
     private final ByteBuffer byteBuffer;
     private final Collection<Item<?>> items;
     private final Item<?> carried;

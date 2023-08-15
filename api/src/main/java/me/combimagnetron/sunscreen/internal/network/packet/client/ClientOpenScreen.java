@@ -1,11 +1,11 @@
 package me.combimagnetron.sunscreen.internal.network.packet.client;
 
 import me.combimagnetron.sunscreen.internal.network.ByteBuffer;
-import me.combimagnetron.sunscreen.internal.network.packet.PacketContainer;
+import me.combimagnetron.sunscreen.internal.network.packet.ClientPacket;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
-public class ClientOpenScreen implements PacketContainer {
+public class ClientOpenScreen implements ClientPacket {
     private final ByteBuffer byteBuffer;
     private final int windowId;
     private final int windowType;

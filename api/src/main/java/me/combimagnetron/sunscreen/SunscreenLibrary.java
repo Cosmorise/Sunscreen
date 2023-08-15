@@ -1,5 +1,6 @@
 package me.combimagnetron.sunscreen;
 
+import me.combimagnetron.sunscreen.event.EventBus;
 import me.combimagnetron.sunscreen.internal.network.Network;
 import me.combimagnetron.sunscreen.screen.FullScreen;
 import me.combimagnetron.sunscreen.screen.Screen;
@@ -12,5 +13,7 @@ public interface SunscreenLibrary {
     FullScreen enlarge(Screen screen);
 
     Network network();
+
+    EventBus eventBus();
 
 }
