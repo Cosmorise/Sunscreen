@@ -15,7 +15,7 @@ public class ServerCloseContainer implements ServerPacket {
 
     private ServerCloseContainer(ByteBuffer byteBuffer) {
         this.byteBuffer = byteBuffer;
-        this.windowId = read(ByteBuffer.Adapter.UNSIGNED_BYTE);
+        this.windowId = read(ByteBuffer.Adapter.VAR_INT);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ServerCloseContainer implements ServerPacket {
 
     @Override
     public byte[] write() {
-        write(ByteBuffer.Adapter.UNSIGNED_BYTE, windowId);
+        write(ByteBuffer.Adapter.VAR_INT, windowId);
         return byteBuffer.bytes();
     }
 }

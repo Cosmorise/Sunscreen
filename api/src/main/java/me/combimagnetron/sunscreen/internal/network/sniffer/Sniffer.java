@@ -28,7 +28,6 @@ public interface Sniffer {
         }
     }
 
-    @SuppressWarnings("unchecked")
     class Node<T extends PacketContainer> {
         private final Map<PacketContainer.Type<T>, Ticket<T>> ticketMap = new HashMap<>();
         private final String name;

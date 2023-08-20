@@ -30,7 +30,7 @@ public class ServerClickContainer implements ServerPacket {
 
     private ServerClickContainer(ByteBuffer byteBuffer) {
         this.byteBuffer = byteBuffer;
-        this.windowId = read(ByteBuffer.Adapter.UNSIGNED_BYTE);
+        this.windowId = read(ByteBuffer.Adapter.VAR_INT);
         this.stateId = read(ByteBuffer.Adapter.VAR_INT);
         this.slot = read(ByteBuffer.Adapter.SHORT);
         this.button = read(ByteBuffer.Adapter.BYTE);
@@ -74,7 +74,7 @@ public class ServerClickContainer implements ServerPacket {
 
     @Override
     public byte[] write() {
-        write(ByteBuffer.Adapter.UNSIGNED_BYTE, windowId);
+        write(ByteBuffer.Adapter.VAR_INT, windowId);
         write(ByteBuffer.Adapter.VAR_INT, stateId);
         write(ByteBuffer.Adapter.SHORT, slot);
         write(ByteBuffer.Adapter.BYTE, button);

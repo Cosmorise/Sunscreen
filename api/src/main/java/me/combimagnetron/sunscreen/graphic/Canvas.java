@@ -7,6 +7,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.TextColor;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -65,12 +66,21 @@ public class Canvas {
 
     public static Canvas image(BufferedImage image) {
         Canvas canvas = new Canvas(image.getHeight(), image.getWidth(), image);
+        SampleColor lastColor = SampleColor.of(0, 0, 2);
         int i = 57344;
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
-                canvas.image[x][y] = Component.text((char) i, TextColor.color(image.getRGB(x, y)));
+                TextColor color = TextColor.color(image.getRGB(x, y));
+                SampleColor currentColor = SampleColor.of(color);
+                if (currentColor.skip(lastColor)) {
+                    canvas.image[x][y] = Component.text((char) i);
+                    continue;
+                }
+                canvas.image[x][y] = Component.text((char) i, color);
                 i++;
+                lastColor = currentColor;
             }
+            i = 57344;
         }
         return canvas;
     }
@@ -83,6 +93,33 @@ public class Canvas {
             throw new RuntimeException(e);
         }
         return image(bufferedImage);
+    }
+
+    record SampleColor(int r, int g, int b) {
+
+        public static SampleColor of(int r, int g, int b) {
+            return new SampleColor(r, g, b);
+        }
+
+        public static SampleColor of(TextColor textColor) {
+            return new SampleColor(textColor.red(), textColor.green(), textColor.blue());
+        }
+
+        public Color color() {
+            return new Color(r, g, b);
+        }
+
+        public boolean skip(SampleColor other) {
+            return isClose(other, 0);
+        }
+
+        private boolean isClose(SampleColor sampleColor, int threshold) {
+            var external = sampleColor.color();
+            var local = color();
+            int r = external.getRed() - local.getRed(), g = external.getGreen() - local.getGreen(), b = external.getBlue()- local.getBlue();
+            return (r*r + g*g + b*b) <= threshold*threshold;
+        }
+
     }
 
 

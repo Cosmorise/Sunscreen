@@ -33,7 +33,7 @@ public class ClientSetScreenContent implements ClientPacket {
 
     private ClientSetScreenContent(ByteBuffer byteBuffer) {
         this.byteBuffer = byteBuffer;
-        this.windowId = read(ByteBuffer.Adapter.UNSIGNED_BYTE);
+        this.windowId = read(ByteBuffer.Adapter.VAR_INT);
         this.stateId = read(ByteBuffer.Adapter.VAR_INT);
         final int size = read(ByteBuffer.Adapter.VAR_INT);
         this.items = new HashSet<>(size);
@@ -47,7 +47,7 @@ public class ClientSetScreenContent implements ClientPacket {
 
     @Override
     public byte[] write() {
-        write(ByteBuffer.Adapter.UNSIGNED_BYTE, windowId).
+        write(ByteBuffer.Adapter.VAR_INT, windowId).
                 write(ByteBuffer.Adapter.VAR_INT, stateId).
                 write(ByteBuffer.Adapter.VAR_INT, items.size());
         if (!items.isEmpty()) {

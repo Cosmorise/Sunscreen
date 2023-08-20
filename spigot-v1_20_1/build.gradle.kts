@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("io.github.patrick.remapper") version "1.4.0"
+    id("io.papermc.paperweight.userdev") version "1.5.5"
 }
 
 group = "me.combimagnetron"
@@ -9,20 +9,19 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
     mavenLocal()
+    maven("https://jitpack.io")
 }
 
 dependencies {
     implementation(project(":api"))
-    compileOnly("net.kyori:adventure-api:4.14.0")
-    compileOnly("net.kyori:adventure-text-serializer-gson:4.14.0")
-    compileOnly("org.spigotmc:spigot:1.20.1-R0.1-SNAPSHOT:remapped-mojang")
+    implementation("net.kyori:adventure-api:4.14.0")
+    implementation("net.kyori:adventure-text-serializer-gson:4.14.0")
+    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
 }
 
 tasks {
-    build {
-        dependsOn("remap")
+    assemble {
+        dependsOn(reobfJar)
     }
-    remap {
-        version.set("1.20.1")
-    }
+
 }

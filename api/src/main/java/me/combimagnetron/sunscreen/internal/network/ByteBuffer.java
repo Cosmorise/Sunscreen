@@ -74,6 +74,10 @@ public final class ByteBuffer {
         return collection;
     }
 
+    public ByteArrayDataOutput output() {
+        return byteArrayDataOutput;
+    }
+
     public byte[] bytes() {
         if (byteArrayDataOutput == null) {
             throw new RuntimeException();
@@ -89,8 +93,11 @@ public final class ByteBuffer {
 
     public interface Adapter<T> {
         Adapter<String> STRING = Impl.of(ByteArrayDataInput::readUTF, ByteArrayDataOutput::writeUTF);
+        Adapter<Long> LONG = Impl.of(ByteArrayDataInput::readLong, ByteArrayDataOutput::writeLong);
+        Adapter<Float> FLOAT = Impl.of(ByteArrayDataInput::readFloat, ByteArrayDataOutput::writeFloat);
         Adapter<Integer> INT = Impl.of(ByteArrayDataInput::readInt, ByteArrayDataOutput::writeInt);
         Adapter<Integer> UNSIGNED_BYTE = Impl.of(ByteArrayDataInput::readUnsignedByte, ByteArrayDataOutput::writeInt);
+        Adapter<Boolean> BOOLEAN = Impl.of(ByteArrayDataInput::readBoolean, ByteArrayDataOutput::writeBoolean);
         Adapter<Byte> BYTE = Impl.of(ByteArrayDataInput::readByte, (output, aByte) -> output.writeByte((int) aByte));
         Adapter<Short> SHORT = Impl.of(ByteArrayDataInput::readShort, (output, aShort) -> output.writeShort((int) aShort));
         Adapter<org.jglrxavpok.hephaistos.nbt.NBT> NBT = Impl.of(
@@ -142,6 +149,7 @@ public final class ByteBuffer {
             output.write(byteBuffer.bytes());
         }));
         Adapter<Integer> VAR_INT = Impl.of(ProtocolUtil::readVarInt, ProtocolUtil::writeVarInt);
+        Adapter<Long> VAR_LONG = Impl.of(ProtocolUtil::readVarLong, ProtocolUtil::writeVarLong);
         T read(ByteArrayDataInput byteArrayDataInput);
         void write(ByteArrayDataOutput output, T object);
         final class Impl<V> implements Adapter<V> {

@@ -12,9 +12,11 @@ repositories {
 }
 
 dependencies {
-    compileOnly("net.kyori:adventure-api:4.14.0")
-    compileOnly("net.kyori:adventure-text-serializer-gson:4.14.0")
+    implementation("net.kyori:adventure-api:4.14.0")
+    implementation("net.kyori:adventure-text-serializer-gson:4.14.0")
     implementation("io.github.jglrxavpok.hephaistos:common:2.6.0")
     implementation("com.google.guava:guava:31.1-jre")
     implementation("com.github.hkirk:java-html2image:0.9")
+    implementation(group = "org.jetbrains.kotlin", name = "kotlin-reflect", version = "1.7.22")
+    implementation(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version = "1.7.22")
 }

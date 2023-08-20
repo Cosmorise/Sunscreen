@@ -37,8 +37,8 @@ public class ClientOpenScreen implements ClientPacket {
     @Override
     public byte[] write() {
         write(ByteBuffer.Adapter.VAR_INT, windowId)
-                .write(ByteBuffer.Adapter.VAR_INT, windowType)
-                .write(ByteBuffer.Adapter.STRING, GsonComponentSerializer.gson().serialize(title));
+                .write(ByteBuffer.Adapter.VAR_INT, windowType);
+                //.write(ByteBuffer.Adapter.STRING, GsonComponentSerializer.gson().serialize(title));
         return byteBuffer.bytes();
     }
 

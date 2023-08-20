@@ -6,7 +6,7 @@ import me.combimagnetron.sunscreen.screen.FullScreen;
 import me.combimagnetron.sunscreen.screen.Screen;
 import me.combimagnetron.sunscreen.provider.impl.ScreenProvider;
 
-public interface SunscreenLibrary {
+public interface SunscreenLibrary<T> {
 
     Screen screen(ScreenProvider<?> provider);
 
@@ -15,5 +15,7 @@ public interface SunscreenLibrary {
     Network network();
 
     EventBus eventBus();
+
+    T plugin();
 
 }

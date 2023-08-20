@@ -31,10 +31,26 @@ public class ClientSetScreenSlot implements ClientPacket {
 
     private ClientSetScreenSlot(ByteBuffer byteBuffer) {
         this.byteBuffer = byteBuffer;
-        this.windowId = read(ByteBuffer.Adapter.UNSIGNED_BYTE);
+        this.windowId = read(ByteBuffer.Adapter.VAR_INT);
         this.stateId = read(ByteBuffer.Adapter.VAR_INT);
         this.slot = read(ByteBuffer.Adapter.SHORT);
         this.item = read(ByteBuffer.Adapter.ITEM);
+    }
+
+    public int windowId() {
+        return windowId;
+    }
+
+    public int stateId() {
+        return stateId;
+    }
+
+    public short slot() {
+        return slot;
+    }
+
+    public Item<?> item() {
+        return item;
     }
 
     @Override
@@ -44,7 +60,7 @@ public class ClientSetScreenSlot implements ClientPacket {
 
     @Override
     public byte[] write() {
-        write(ByteBuffer.Adapter.UNSIGNED_BYTE, windowId);
+        write(ByteBuffer.Adapter.VAR_INT, windowId);
         write(ByteBuffer.Adapter.VAR_INT, stateId);
         write(ByteBuffer.Adapter.SHORT, slot);
         write(ByteBuffer.Adapter.ITEM, item);

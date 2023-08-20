@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.function.Function;
 
 public class Item<M> {
-    private final static Item<String> EMPTY = Item.item("air");
+    private final static Item<Integer> EMPTY = Item.item(/*9648*/ 26842);
     private List<Component> lore = new ArrayList<>();
     private MutableNBTCompound nbtCompound;
     private MutableNBTCompound tag;
@@ -25,7 +25,7 @@ public class Item<M> {
         this.material = material;
         this.amount = amount;
         this.nbtCompound = NBTCompound.EMPTY.toMutableCompound();
-        this.nbtCompound.set("id", NBT.String((String) material));
+        //this.nbtCompound.set("id", NBT.Int((int) material));
         this.nbtCompound.set("count", NBT.Byte(amount));
         this.tag = nbtCompound.set("tag", NBTCompound.EMPTY);
         this.tag.set("display", NBTCompound.EMPTY);

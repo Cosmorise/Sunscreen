@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 public interface ChestMenu {
@@ -48,16 +49,14 @@ public interface ChestMenu {
 
         private void open() {
             final ClientOpenScreen openScreen = ClientOpenScreen.of(windowId, 5, title.next());
-            final ClientSetScreenContent setScreenContent = ClientSetScreenContent.of(contents.all(), Item.empty(), 0, windowId);
+            //final ClientSetScreenContent setScreenContent = ClientSetScreenContent.of(contents.all(), Item.empty(), 0, windowId);
             connection.send(openScreen);
-            connection.send(setScreenContent);
-            refresh();
+            //connection.send(setScreenContent);
+            //refresh();
         }
 
         private void refresh() {
-            connection.send(ClientBundleDelimiter.bundleDelimiter());
-            contents.pairStream().forEach(pair -> connection.send(ClientSetScreenSlot.of(windowId, 0, pair.k().shortValue(), pair.v())));
-            connection.send(ClientBundleDelimiter.bundleDelimiter());
+            connection.send(ClientBundleDelimiter.bundleDelimiter(contents.pairStream().map(pair -> ClientSetScreenSlot.of(windowId, 0, pair.k().shortValue(), pair.v())).toList().toArray(new ClientSetScreenSlot[0])));
         }
 
         @Override
@@ -72,6 +71,7 @@ public interface ChestMenu {
 
         public void title(Title title) {
             this.title = title;
+            open();
         }
 
         @Override
@@ -91,6 +91,14 @@ public interface ChestMenu {
 
         private Contents(Consumer<Contents> updateConsumer) {
             this.updateConsumer = updateConsumer;
+            for (int i = 0; i < 6; i++) {
+                rows.add(i, Row.empty());
+            }
+            for (Row row : rows) {
+                for (int i = 0; i < 9; i++) {
+                    row.list.add(Item.empty());
+                }
+            }
         }
 
         public void set(Pos2D pos, Item<?> item) {
@@ -134,6 +142,10 @@ public interface ChestMenu {
         }
 
         public record Row(LinkedList<Item<?>> list) {
+
+            static Row empty() {
+                return new Row(new LinkedList<>());
+            }
 
             static Row of(LinkedList<Item<?>> list) {
                 return new Row(list);
