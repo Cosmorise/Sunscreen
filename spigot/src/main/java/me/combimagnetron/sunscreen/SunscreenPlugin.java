@@ -2,12 +2,9 @@ package me.combimagnetron.sunscreen;
 
 import me.combimagnetron.sunscreen.graphic.Canvas;
 import me.combimagnetron.sunscreen.internal.ChestMenu;
-import me.combimagnetron.sunscreen.internal.Item;
+import me.combimagnetron.sunscreen.internal.Title;
 import me.combimagnetron.sunscreen.user.User;
 import me.combimagnetron.sunscreen.user.UserManager;
-import me.combimagnetron.sunscreen.util.Pos2D;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,9 +26,9 @@ public class SunscreenPlugin extends JavaPlugin implements Listener {
     public void onSwap(PlayerSwapHandItemsEvent event) {
         final User<Player> user = userManager.user(event.getPlayer());
         final Canvas canvas = Canvas.url("https://i.imgur.com/IBpr6QO.jpg");
-        ChestMenu chestMenu = new ChestMenu.Impl(user);
-        chestMenu.title(ChestMenu.Title.fixed(canvas.render()));
-        chestMenu.contents().set(Pos2D.of(3, 3), Item.item(Material.STONE));
+        ChestMenu chestMenu = ChestMenu.menu(user);
+        chestMenu.title(Title.fixed(canvas.renderAsync()));
+        //chestMenu.contents().set(Pos2D.of(3, 3), Item.item(Material.STONE));
     }
 
 

@@ -24,6 +24,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.item.ItemStack;
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -74,7 +75,7 @@ public class ConnectionImpl implements me.combimagnetron.sunscreen.internal.netw
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, @NotNull Object message) throws Exception {
-            ByteBuffer buffer = ByteBuffer.of(ctx.alloc().buffer().array());
+            ByteBuffer buffer = ByteBuffer.of((byte[]) message);
             int id = buffer.read(ByteBuffer.Adapter.INT);
             Class<? extends PacketContainer> clazz = VersionRegistry.server(id);
             if (clazz == null) {

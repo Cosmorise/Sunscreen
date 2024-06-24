@@ -3,10 +3,11 @@ package me.combimagnetron.sunscreen;
 import me.combimagnetron.sunscreen.event.EventBus;
 import me.combimagnetron.sunscreen.internal.network.Network;
 import me.combimagnetron.sunscreen.internal.network.sniffer.Sniffer;
+import me.combimagnetron.sunscreen.menu.Menu;
 import me.combimagnetron.sunscreen.provider.impl.ScreenProvider;
-import me.combimagnetron.sunscreen.screen.FullScreen;
-import me.combimagnetron.sunscreen.screen.Screen;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.nio.file.Path;
 
 public class SunscreenLibrarySpigot implements SunscreenLibrary<JavaPlugin> {
     private final JavaPlugin plugin;
@@ -16,19 +17,20 @@ public class SunscreenLibrarySpigot implements SunscreenLibrary<JavaPlugin> {
     }
 
     private final Sniffer sniffer = new Sniffer.Impl();
-    @Override
-    public Screen screen(ScreenProvider<?> provider) {
-        return provider.provided();
-    }
 
     @Override
-    public FullScreen enlarge(Screen screen) {
+    public Menu menu(ScreenProvider<?> provider) {
         return null;
     }
 
     @Override
     public Network network() {
         return () -> sniffer;
+    }
+
+    @Override
+    public Path path() {
+        return plugin.getDataFolder().toPath();
     }
 
     @Override

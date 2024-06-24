@@ -1,6 +1,7 @@
 package me.combimagnetron.sunscreen.graphic;
 
 import me.combimagnetron.sunscreen.util.Pos2D;
+import me.combimagnetron.sunscreen.util.Scheduler;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -12,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URL;
+import java.util.LinkedList;
 
 public class Canvas {
     private static final String NAMESPACE = "sunscreen";
@@ -62,6 +64,10 @@ public class Canvas {
             component = component.append(Component.text("z").font(Key.key(NAMESPACE + ":dynamic")));
         }
         return component;
+    }
+
+    public Component renderAsync() {
+        return Scheduler.async(this::render);
     }
 
     public static Canvas image(BufferedImage image) {

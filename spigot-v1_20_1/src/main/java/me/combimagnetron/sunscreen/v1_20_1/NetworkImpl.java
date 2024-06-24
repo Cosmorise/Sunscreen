@@ -17,7 +17,7 @@ public class NetworkImpl implements Network {
     }
 
     final class DefaultListener {
-        private final Sniffer.Node<ServerClickContainer> node = sniffer().node("default");
+        private final Sniffer.Node<ServerClickContainer> node = sniffer().node("internal");
         private final Sniffer.Ticket<ServerClickContainer> ticket;
 
         DefaultListener() {

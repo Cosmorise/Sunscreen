@@ -17,17 +17,18 @@ func purchaseItem(Text name, var player) { // Both 'var'/'val' keywords and decl
     }
 }
 
-fullscreen menu ShopMenu {
-    elements {
-        background -> canvas(url = "")
-        hello-world-text = [0, 240] -> text("Hello world!")
-        button = [0, 10] -> button(
-            texture = canvas(file = "/button")
-            click = (event) -> {
-                @.cursor.lock
-                purchaseItem("item", event.user)
+fullscreen menu Factor50 {
+    identifier = id("foo", "bar")
+    example-div {
+        background = canvas(url = "")
+        button = [size(200px, 4%), pos(50%, 50%)] {
+            texture = canvas(font = "test:test", icon = "a")
+            click = [player.name != herobrine & player.health < 10] -> {
+                @self.tooltip = list("hello", "world")
+                event.player.sendMessage(text("not herobrine!"))
             }
-        )
+        }
+        element1 = [pos(4px, 1600px)] -> text("Hello world!")
     }
 }
 

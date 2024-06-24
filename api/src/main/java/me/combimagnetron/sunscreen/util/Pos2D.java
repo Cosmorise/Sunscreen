@@ -2,6 +2,14 @@ package me.combimagnetron.sunscreen.util;
 
 public record Pos2D(double x, double y) {
 
+    public int xi() {
+        return (int) x;
+    }
+
+    public int yi() {
+        return (int) y;
+    }
+
     public static Pos2D of(double x, double y) {
         return new Pos2D(x, y);
     }

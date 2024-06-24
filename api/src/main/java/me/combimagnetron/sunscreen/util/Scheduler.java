@@ -1,12 +1,9 @@
 package me.combimagnetron.sunscreen.util;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class Scheduler {
-    private final static ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
+    private final static ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newScheduledThreadPool(2);
 
     public static void delayTick(Runnable code) {
         SCHEDULED_EXECUTOR_SERVICE.schedule(code, 50L, TimeUnit.MILLISECONDS);
@@ -17,6 +14,14 @@ public class Scheduler {
     }
 
     public record Duration(long time, TimeUnit timeUnit) {
+    }
+
+    public static <T> T async(Callable<T> runnable) {
+        try {
+            return SCHEDULED_EXECUTOR_SERVICE.schedule(runnable, 0L, TimeUnit.MICROSECONDS).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

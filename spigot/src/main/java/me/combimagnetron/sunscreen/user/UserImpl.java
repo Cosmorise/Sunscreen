@@ -2,7 +2,7 @@ package me.combimagnetron.sunscreen.user;
 
 import me.combimagnetron.sunscreen.SunscreenLibrary;
 import me.combimagnetron.sunscreen.internal.network.Connection;
-import me.combimagnetron.sunscreen.screen.Screen;
+import me.combimagnetron.sunscreen.menu.Menu;
 import me.combimagnetron.sunscreen.session.Session;
 import me.combimagnetron.sunscreen.v1_20_1.ConnectionImpl;
 import org.bukkit.entity.Player;
@@ -33,7 +33,7 @@ public class UserImpl implements User<Player> {
     }
 
     @Override
-    public Session show(Screen screen) {
+    public Session show(Menu menu) {
         return null;
     }
 }

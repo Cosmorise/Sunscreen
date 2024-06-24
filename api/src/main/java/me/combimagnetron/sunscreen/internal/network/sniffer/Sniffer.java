@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unchecked")
 public interface Sniffer {
 
     <T extends PacketContainer> Node<T> node(String name);

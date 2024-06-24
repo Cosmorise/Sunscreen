@@ -1,11 +1,11 @@
 package me.combimagnetron.sunscreen.session;
 
-import me.combimagnetron.sunscreen.screen.Screen;
+import me.combimagnetron.sunscreen.menu.Menu;
 import me.combimagnetron.sunscreen.user.User;
 
 public interface Session {
 
-    Screen screen();
+    Menu menu();
 
     User<?> user();
 
