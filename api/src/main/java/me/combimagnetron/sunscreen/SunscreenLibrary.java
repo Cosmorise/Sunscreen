@@ -1,7 +1,7 @@
 package me.combimagnetron.sunscreen;
 
 import me.combimagnetron.sunscreen.event.EventBus;
-import me.combimagnetron.sunscreen.internal.network.Network;
+import me.combimagnetron.sunscreen.game.network.Network;
 import me.combimagnetron.sunscreen.menu.Menu;
 import me.combimagnetron.sunscreen.provider.impl.ScreenProvider;
 

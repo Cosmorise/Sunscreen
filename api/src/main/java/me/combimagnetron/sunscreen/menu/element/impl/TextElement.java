@@ -1,10 +1,10 @@
 package me.combimagnetron.sunscreen.menu.element.impl;
 
-import me.combimagnetron.comet.data.Identifier;
-import me.combimagnetron.comet.feature.menu.Pos2D;
-import me.combimagnetron.comet.feature.menu.element.Position;
-import me.combimagnetron.comet.feature.menu.element.SimpleBufferedElement;
-import me.combimagnetron.comet.feature.menu.style.Text;
+import me.combimagnetron.sunscreen.util.Identifier;
+import me.combimagnetron.sunscreen.util.Pos2D;
+import me.combimagnetron.sunscreen.menu.element.Position;
+import me.combimagnetron.sunscreen.menu.element.SimpleBufferedElement;
+import me.combimagnetron.sunscreen.menu.style.Text;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -1,8 +1,8 @@
 package me.combimagnetron.sunscreen.menu;
 
 import me.combimagnetron.sunscreen.graphic.Canvas;
-import me.combimagnetron.sunscreen.internal.ChestMenu;
-import me.combimagnetron.sunscreen.internal.Title;
+import me.combimagnetron.sunscreen.game.ChestMenu;
+import me.combimagnetron.sunscreen.game.Title;
 import me.combimagnetron.sunscreen.menu.annotation.Logic;
 import me.combimagnetron.sunscreen.menu.draft.Draft;
 import me.combimagnetron.sunscreen.menu.input.Input;

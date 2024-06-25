@@ -1,8 +1,8 @@
 package me.combimagnetron.sunscreen.menu.element;
 
-import me.combimagnetron.comet.data.Identifier;
-import me.combimagnetron.comet.feature.menu.Canvas;
-import me.combimagnetron.comet.feature.menu.Editable;
+import me.combimagnetron.sunscreen.util.Identifier;
+import me.combimagnetron.sunscreen.graphic.Canvas;
+import me.combimagnetron.sunscreen.menu.Editable;
 
 public interface Element extends Editable {
 

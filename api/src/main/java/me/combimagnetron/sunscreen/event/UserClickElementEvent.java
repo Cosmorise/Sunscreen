@@ -1,6 +1,6 @@
 package me.combimagnetron.sunscreen.event;
 
-import me.combimagnetron.sunscreen.element.Element;
+import me.combimagnetron.sunscreen.menu.element.Element;
 import me.combimagnetron.sunscreen.user.User;
 
 public record UserClickElementEvent(User<?> user, Element element) implements Event {

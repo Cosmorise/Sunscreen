@@ -1,6 +1,6 @@
 package me.combimagnetron.sunscreen.event;
 
-import me.combimagnetron.sunscreen.internal.Item;
+import me.combimagnetron.sunscreen.game.Item;
 import me.combimagnetron.sunscreen.screen.Screen;
 import me.combimagnetron.sunscreen.user.User;
 

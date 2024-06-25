@@ -1,7 +1,7 @@
 package me.combimagnetron.sunscreen.menu.element;
 
-import me.combimagnetron.comet.event.impl.menu.UserClickElementEvent;
-import me.combimagnetron.comet.event.impl.menu.UserHoverElementEvent;
+import me.combimagnetron.sunscreen.event.UserClickElementEvent;
+import me.combimagnetron.sunscreen.event.UserHoverElementEvent;
 
 import java.util.function.Consumer;
 

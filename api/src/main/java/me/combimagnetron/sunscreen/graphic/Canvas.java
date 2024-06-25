@@ -1,5 +1,6 @@
 package me.combimagnetron.sunscreen.graphic;
 
+import me.combimagnetron.sunscreen.util.Identifier;
 import me.combimagnetron.sunscreen.util.Pos2D;
 import me.combimagnetron.sunscreen.util.Scheduler;
 import net.kyori.adventure.key.Key;
@@ -13,41 +14,55 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.URL;
-import java.util.LinkedList;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class Canvas {
     private static final String NAMESPACE = "sunscreen";
-    private final BufferedImage bufferedImage;
+    private final TreeSet<Layer> layers = new TreeSet<>();
     private final TextComponent[][] image;
     private final int width;
     private final int height;
 
     protected Canvas(int width, int height) {
-        this.bufferedImage = new BufferedImage(width, height, 2);
+        this.layers.add(Layer.background(new BufferedImage(width, height, 2)));
         image = (TextComponent[][]) Array.newInstance(TextComponent.class, height, width);
         this.width = width;
         this.height = height;
     }
 
     public Canvas(int width, int height, BufferedImage image) {
-        this.bufferedImage = image;
+        this.layers.add(Layer.background(image));
         this.image = (TextComponent[][]) Array.newInstance(TextComponent.class, height, width);
         this.width = width;
         this.height = height;
     }
 
+    public Canvas addLayer(Layer layer) {
+        layers.add(layer);
+        return this;
+    }
+
+    public Canvas removeLayer(Identifier identifier) {
+        layers.removeIf(layer -> layer.name().equals(identifier));
+        return this;
+    }
+
+    public Layer layer(Identifier identifier) {
+        return layers.stream().filter(layer -> layer.name().equals(identifier)).findFirst().orElse(null);
+    }
 
     public Pos2D dimensions() {
         return Pos2D.of(width, height);
     }
 
     public Canvas splice(Pos2D size, Pos2D coords) {
-        final BufferedImage spliced = bufferedImage.getSubimage((int)coords.x(), (int)coords.y(), (int)size.x(), (int)size.y());
+        final BufferedImage spliced = squash().getSubimage((int)coords.x(), (int)coords.y(), (int)size.x(), (int)size.y());
         return new Canvas((int)size.x(), (int)size.y(), spliced);
     }
 
-    public BufferedImage image() {
-        return bufferedImage;
+    public BufferedImage background() {
+        return layers.last().bufferedImage();
     }
 
 
@@ -57,6 +72,7 @@ public class Canvas {
 
     public Component render() {
         Component component = Component.empty();
+        assemble();
         for (int row = 0; row < image.length; row++) {
             for (int col = 0; col < image[row].length; col++) {
                 component = component.append(image[row][col]).append(Component.text("x")).font(Key.key(NAMESPACE + ":dynamic"));
@@ -66,12 +82,16 @@ public class Canvas {
         return component;
     }
 
-    public Component renderAsync() {
-        return Scheduler.async(this::render);
+    private BufferedImage squash() {
+        BufferedImage image = new BufferedImage(width, height, 2);
+        Graphics2D graphics = image.createGraphics();
+        layers.descendingSet().reversed().iterator().forEachRemaining(layer -> graphics.drawImage(layer.bufferedImage(), 0, 0, null));
+        graphics.dispose();
+        return image;
     }
 
-    public static Canvas image(BufferedImage image) {
-        Canvas canvas = new Canvas(image.getHeight(), image.getWidth(), image);
+    private void assemble() {
+        BufferedImage image = squash();
         SampleColor lastColor = SampleColor.of(0, 0, 2);
         int i = 57344;
         for (int x = 0; x < image.getWidth(); x++) {
@@ -79,15 +99,23 @@ public class Canvas {
                 TextColor color = TextColor.color(image.getRGB(x, y));
                 SampleColor currentColor = SampleColor.of(color);
                 if (currentColor.skip(lastColor)) {
-                    canvas.image[x][y] = Component.text((char) i);
+                    this.image[x][y] = Component.text((char) i);
                     continue;
                 }
-                canvas.image[x][y] = Component.text((char) i, color);
+                this.image[x][y] = Component.text((char) i, color);
                 i++;
                 lastColor = currentColor;
             }
             i = 57344;
         }
+    }
+
+    public Component renderAsync() {
+        return Scheduler.async(this::render);
+    }
+
+    public static Canvas image(BufferedImage image) {
+        Canvas canvas = new Canvas(image.getHeight(), image.getWidth(), image);
         return canvas;
     }
 

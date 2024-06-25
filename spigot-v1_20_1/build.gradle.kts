@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("io.papermc.paperweight.userdev") version "1.5.5"
+    id("io.papermc.paperweight.userdev") version "1.6.2"
 }
 
 group = "me.combimagnetron"
@@ -16,7 +16,7 @@ dependencies {
     implementation(project(":api"))
     implementation("net.kyori:adventure-api:4.14.0")
     implementation("net.kyori:adventure-text-serializer-gson:4.14.0")
-    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.5-R0.1-SNAPSHOT")
 }
 
 tasks {

@@ -1,8 +1,8 @@
 package me.combimagnetron.sunscreen;
 
 import me.combimagnetron.sunscreen.graphic.Canvas;
-import me.combimagnetron.sunscreen.internal.ChestMenu;
-import me.combimagnetron.sunscreen.internal.Title;
+import me.combimagnetron.sunscreen.game.ChestMenu;
+import me.combimagnetron.sunscreen.game.Title;
 import me.combimagnetron.sunscreen.user.User;
 import me.combimagnetron.sunscreen.user.UserManager;
 import org.bukkit.entity.Player;

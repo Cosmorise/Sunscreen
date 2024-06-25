@@ -1,7 +1,6 @@
 package me.combimagnetron.sunscreen.provider.impl;
 
-import me.combimagnetron.sunscreen.internal.ChestMenu;
-import me.combimagnetron.sunscreen.provider.Provider;
+import me.combimagnetron.sunscreen.game.ChestMenu;
 import me.combimagnetron.sunscreen.util.Pair;
 
 import java.util.Collection;

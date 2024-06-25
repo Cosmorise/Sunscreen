@@ -1,6 +1,6 @@
 package me.combimagnetron.sunscreen.v1_20_1.type;
 
-import me.combimagnetron.sunscreen.internal.Item;
+import me.combimagnetron.sunscreen.game.Item;
 import me.combimagnetron.sunscreen.v1_20_1.type.mapping.Mapping;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
@@ -11,9 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_20_R1.util.CraftMagicNumbers;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.function.Function;
 
