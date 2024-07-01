@@ -48,7 +48,8 @@ public final class WindowedChestMenu implements Menu {
     }
 
     @Override
-    public void open(User<?> user) {
-
+    public User<?> user() {
+        return null;
     }
+
 }
